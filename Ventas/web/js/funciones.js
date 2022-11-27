@@ -10,8 +10,10 @@ function cargarElementoDinamicamente(url, elemento){
     elemento.innerHTML = request.responseText;
 }
 
-function cargarLogin(){
-    cargarElementoDinamicante("productos.jsp", document.getElementById("contenidoDinamico"));
+function cargarProductos(){
+    cargarElementoDinamicante("Productos/productos.jsp", document.getElementById("contenidoDinamico"));
 }
 
-
+function cargarLogin(){
+    cargarElementoDinamicamente("login.jsp", document.getElementById("contenidoDinamico"));
+}

@@ -7,33 +7,53 @@ package config;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 /**
  *
  * @author Anthony
  */
 public class Conexion {
+    private static String url = "jdbc:mysql://localhost:3306/productos_bd";
+    private static String usuario = "root";
+    private static String contrasena = "12345";
     
-    public Connection  getConexion () {
+    private static Connection conexion;
+    private static PreparedStatement sentenciaPreparada;
+    private static ResultSet resultado;
+    
+    public static Connection conectar(){
+        Connection conexion = null;
         
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            conexion = DriverManager.getConnection(url,usuario,contrasena);
+        }catch (ClassNotFoundException | SQLException e) {
+            System.out.println("Error" + e);
+        }
+        return conexion; 
+    }
+    
+    public static void  main (String [] args) {
+     
         try{
-            Class.forName("com.mysql.jdbc.Driver");  
-            Connection conexion =  DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/ventas","root","12345");
-            System.out.println("Coneccion Exitosa");
+            conexion = conectar();
+            String consulta = "INSERT INTO usuarios (idusuario,nombre,contrasena) VALUES ('1','admin','12345')";
+            sentenciaPreparada = conexion.prepareStatement(consulta);
+            int i = sentenciaPreparada.executeUpdate();
             
-            return conexion;
-            
-        } catch (SQLException e){
-            System.out.println(e.toString() );
-            return null;
-         } catch (ClassNotFoundException ex) {  
-            Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
-
-        }  
-     }
+            if(i > 0) {
+                System.out.println("Se guardaron los datos");
+            }else{
+                System.out.println("No Guardaron los datos");
+            }
+            conexion.close();
+        }catch (SQLException e) {
+            System.out.println("Error " + e);
+         }
+    }
     
 }
